@@ -401,13 +401,22 @@ const config: Config = {
       },
 
       keyframes: {
+        //used banner small right
         "flash-glide": {
           "0%": { left: "-100%" },
           "100%": { left: "150%" },
         },
+        //used 4 criterias
+        rotateY: {
+          "0%": { transform: "rotateY(0deg)" },
+          "100%": { transform: "rotateY(360deg)" },
+        },
       },
       animation: {
+        //used banner small right
         "flash-glide": "flash-glide 0.7s ease-in-out",
+        //used 4 criterias
+        rotateY: "rotateY 0.6s ease-in-out",
       },
     },
   },

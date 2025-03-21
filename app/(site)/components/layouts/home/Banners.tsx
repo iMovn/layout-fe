@@ -8,36 +8,42 @@ import "swiper/css";
 
 const imgBanners = [
   {
+    id: 1,
     src: "/banner/banner1.jpg",
     alt: "Banner 1",
     link: "/lien-he",
     type: "large",
   },
   {
+    id: 2,
     src: "/banner/banner2.jpg",
     alt: "Banner 2",
     link: "/lien-he",
     type: "small",
   },
   {
+    id: 3,
     src: "/banner/banner3.jpg",
     alt: "Banner 3",
     link: "/lien-he",
     type: "small",
   },
   {
+    id: 4,
     src: "/banner/banner4.jpg",
     alt: "Banner 4",
     link: "/lien-he",
     type: "small",
   },
   {
+    id: 5,
     src: "/banner/banner5.jpg",
     alt: "Banner 5",
     link: "/lien-he",
     type: "small",
   },
   {
+    id: 6,
     src: "/banner/banner3.jpg",
     alt: "Banner 6",
     link: "/lien-he",
@@ -77,8 +83,8 @@ export default function Banners() {
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           className="!px-1"
         >
-          {smallBanners.map((img, index) => (
-            <SwiperSlide key={index}>
+          {smallBanners.map((img) => (
+            <SwiperSlide key={img.id}>
               <Link href={img.link}>
                 <div className="relative w-full h-full">
                   <Image
@@ -131,8 +137,8 @@ export default function Banners() {
             modules={[Autoplay]}
             className="h-[418px]"
           >
-            {smallBanners.map((img, index) => (
-              <SwiperSlide key={index}>
+            {smallBanners.map((img) => (
+              <SwiperSlide key={img.id}>
                 <Link
                   href={img.link}
                   className="relative overflow-hidden group block"
