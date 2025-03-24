@@ -25,4 +25,5 @@ export const mulish = localFont({
   ],
 
   weight: "400 700", //range of weights
+  display: "swap",
 });

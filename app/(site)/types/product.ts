@@ -1,6 +1,11 @@
 // ===========================
 // Type sản phẩm khuyến mãi
 // ===========================
+export type AttributeValue = {
+  name: string;
+  price?: number;
+  image?: string;
+};
 export type ProductType = {
   id: number;
   name: string;
@@ -9,14 +14,10 @@ export type ProductType = {
   description?: string;
   rating: number; // 0 -> 5
   attributes?: {
-    [key: string]: {
-      name: string;
-      price?: number;
-      image?: string;
-    }[];
+    [key: string]: AttributeValue[];
   };
   brand?: string;
-  price?: number;
-  originalPrice?: number;
+  price: number;
+  originalPrice: number;
   inStock?: boolean;
 };

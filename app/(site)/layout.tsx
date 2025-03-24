@@ -4,6 +4,7 @@ import { mulish } from "./fonts";
 import Header from "./components/modules/header";
 import MobileBottomNav from "./components/modules/header/mobile/MobileBottomNav";
 import MobileMenuSlide from "./components/modules/header/mobile/MobileMenuSlide";
+import Footer from "./components/modules/footer";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,6 +22,7 @@ export default function SiteLayout({
       <main className={`${mulish.className} antialiased flex-row`}>
         {children}
       </main>
+      <Footer />
       <MobileMenuSlide />
       <MobileBottomNav />
     </div>

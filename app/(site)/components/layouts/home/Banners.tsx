@@ -78,7 +78,6 @@ export default function Banners() {
         <Swiper
           spaceBetween={8}
           slidesPerView={2}
-          loop
           modules={[Autoplay]}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           className="!px-1"
@@ -132,7 +131,6 @@ export default function Banners() {
             direction="vertical"
             spaceBetween={6}
             slidesPerView={2}
-            loop
             autoplay={{ delay: 3000, disableOnInteraction: false }}
             modules={[Autoplay]}
             className="h-[418px]"

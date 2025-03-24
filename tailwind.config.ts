@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
+import { customAnimations } from "./app/tailwind/animations";
 
 const config: Config = {
-  darkMode: ["class"],
   content: [
     "./app/**/*.{js,ts,tsx}",
     "./components/**/*.{js,ts,tsx}",
@@ -90,6 +90,7 @@ const config: Config = {
       white: "#ffffff",
       black: "#000000",
       transparent: "transparent",
+      primary_custom: "#CCFF01",
     },
     fontSize: {
       display1: [
@@ -359,64 +360,48 @@ const config: Config = {
       ],
     },
     screens: {
-      sx: "320px",
-      tiny: "360px",
-      sm: "575px",
-      ms: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      // '2xl': '1440px',
-      // '3xl': '1680px',
-      // '4xl': '1920px'
+      sx: "360px", // Smartwatch, điện thoại nhỏ
+      tiny: "480px", // Điện thoại phổ thông
+      sm: "640px", // Mobile lớn
+      ms: "768px", // Tablet dọc
+      md: "896px", // Tablet ngang
+      lg: "1024px", // Laptop nhỏ
+      xl: "1280px", // Desktop
+      wide: "1440px", // Desktop rộng (monitor full HD)
+      ultra: "1600px", // Màn 2K trở lên
     },
     container: {
       center: true,
-      screens: {
-        sx: "320px",
-        tiny: "360px",
-        sm: "575px",
-        ms: "768px",
-        lg: "1024px",
-        xl: "1320px",
-        // '2xl': '1440px',
-        // '3xl': '1680px',
-        // '4xl': '1920px'
-      },
       padding: {
-        DEFAULT: "0rem",
-        sx: "0rem",
-        tiny: "0rem",
-        sm: "0rem",
-        ms: "0rem",
-        lg: "0rem",
-        xl: "0rem",
-        "2xl": "0rem",
-        "3xl": "0rem",
-        "4xl": "0rem",
+        DEFAULT: "1rem", // fallback
+        sx: "1rem",
+        tiny: "1rem",
+        sm: "1rem",
+        ms: "1.5rem",
+        md: "2rem",
+        lg: "2rem",
+        xl: "2.5rem",
+        wide: "3rem",
+        ultra: "4rem",
+      },
+      screens: {
+        sx: "100%",
+        tiny: "100%",
+        sm: "100%",
+        ms: "720px",
+        md: "800px",
+        lg: "960px",
+        xl: "1140px",
+        wide: "1320px",
+        ultra: "1440px",
       },
     },
     extend: {
-      colors: {
-        primary_custom: "#CCFF01",
-      },
-
       keyframes: {
-        //used banner small right
-        "flash-glide": {
-          "0%": { left: "-100%" },
-          "100%": { left: "150%" },
-        },
-        //used 4 criterias
-        rotateY: {
-          "0%": { transform: "rotateY(0deg)" },
-          "100%": { transform: "rotateY(360deg)" },
-        },
+        ...customAnimations.keyframes,
       },
       animation: {
-        //used banner small right
-        "flash-glide": "flash-glide 0.7s ease-in-out",
-        //used 4 criterias
-        rotateY: "rotateY 0.6s ease-in-out",
+        ...customAnimations.animation,
       },
     },
   },

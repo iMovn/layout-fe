@@ -40,7 +40,7 @@ export default function Criterias() {
         <Swiper
           spaceBetween={50}
           slidesPerView={1}
-          loop
+          loop={criteriaItems.length > 4}
           modules={[Autoplay]}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           breakpoints={{
@@ -50,15 +50,15 @@ export default function Criterias() {
         >
           {criteriaItems.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="group flex items-center bg-gradient-to-r from-[#C6F700] to-[#B2DE00] text-black py-0 rounded-l-[68px] rounded-r-[40px] overflow-hidden shadow-sm">
-                <motion.div className="group-hover:animate-rotateY w-[70px] h-[70px] flex-shrink-0 rounded-full shadow-md shadow-gray-400 bg-white flex items-center justify-center border-[3px] border-primary_custom mr-3">
+              <div className="group flex items-center bg-gradient-to-r from-[#C6F700] to-[#B2DE00] text-black py-0 rounded-l-[68px] rounded-r-[40px] overflow-hidden shadow-sm cursor-pointer">
+                <motion.div className="group-hover:animate-rotateY relative w-[70px] h-[70px] flex-shrink-0 rounded-full shadow-md shadow-gray-400 bg-white flex items-center justify-center border-[3px] border-primary_custom mr-3">
                   <Image
                     src={item.icon}
                     alt={item.name}
-                    width={32}
-                    height={32}
+                    width={40}
+                    height={40}
                     loading="lazy"
-                    className="object-contain"
+                    className="w-auto h-auto object-contain"
                   />
                 </motion.div>
                 <div>

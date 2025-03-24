@@ -2,24 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  h1 {
-    @apply text-heading1 first-letter:capitalize;
-  }
-  h2 {
-    @apply text-heading2 first-letter:capitalize;
-  }
-  h3 {
-    @apply text-heading3 first-letter:capitalize;
-  }
-  h4 {
-    @apply text-heading4 first-letter:capitalize;
-  }
-  h5 {
-    @apply text-heading5 first-letter:capitalize;
-  }
-}
-
 .hotline_header .icon::before {
   content: "";
   width: 100%;
@@ -32,6 +14,24 @@
   -webkit-border-radius: 0 0 50px 50px;
   -moz-border-radius: 0 0 50px 50px;
   border-radius: 0 0 50px 50px;
+}
+
+.footer__title.has-line::before {
+  content: "";
+  width: 35px;
+  height: 3px;
+  background: #fff;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  -webkit-border-radius: 50px;
+  -moz-border-radius: 50px;
+  border-radius: 50px;
+}
+
+.info ul li:nth-child(1) {
+  font-size: 28px;
+  font-weight: 700;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,678 @@
+// "use client";
+
+// import { useState, useMemo } from "react";
+// import Image from "next/image";
+// import Link from "next/link";
+// import { ShoppingCart, Star } from "lucide-react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { Button } from "@/components/ui/button";
+// import { formatCurrency, getDiscountPercent } from "@/lib/utils";
+// import ProductAttributeSelector from "./ProductAttributeSelector";
+// import { AttributeValue, ProductType } from "../../types/product";
+
+// type Props = {
+//   product: ProductType;
+// };
+
+// export default function ProductCard({ product }: Props) {
+//   const [selectedAttributes, setSelectedAttributes] = useState<
+//     Record<string, string>
+//   >({});
+//   const [selectedImage, setSelectedImage] = useState(product.image);
+
+//   const colorOptions = product.attributes?.color || [];
+//   const selectedColor = selectedAttributes.color || null;
+
+//   const selectedVariant = useMemo(() => {
+//     return colorOptions.find((c) => c.name === selectedColor) || null;
+//   }, [colorOptions, selectedColor]);
+
+//   const displayImage = selectedVariant?.image || selectedImage;
+
+//   const hasAttributes =
+//     !!product.attributes && Object.keys(product.attributes).length > 0;
+
+//   const finalPrice = useMemo(() => {
+//     let total = product.price || 0;
+//     if (hasAttributes) {
+//       for (const type in product.attributes) {
+//         const selected = selectedAttributes[type];
+//         const attr = product.attributes[type].find((a) => a.name === selected);
+//         if (attr?.price) total += attr.price;
+//       }
+//     }
+//     return total;
+//   }, [selectedAttributes, product]);
+
+//   const prices = useMemo(() => {
+//     if (!hasAttributes) {
+//       return {
+//         min: product.price || 0,
+//         max: product.price || 0,
+//       };
+//     }
+
+//     const attrValues: AttributeValue[] = Object.values(
+//       product.attributes ?? {}
+//     ).flat();
+
+//     const allPrices = attrValues
+//       .map((attr) => attr.price)
+//       .filter((price): price is number => typeof price === "number");
+
+//     const min = allPrices.length > 0 ? Math.min(...allPrices) : product.price;
+//     const max = allPrices.length > 0 ? Math.max(...allPrices) : product.price;
+
+//     return { min, max };
+//   }, [product]);
+
+//   const displayPrice = useMemo(() => {
+//     if (!hasAttributes) return product.price;
+//     return (
+//       selectedVariant?.price ?? (prices.min === prices.max ? prices.min : null)
+//     );
+//   }, [selectedVariant, prices, product, hasAttributes]);
+
+//   const displayOriginalPrice = useMemo(() => {
+//     if (!hasAttributes) return product.originalPrice;
+//     return product.originalPrice;
+//   }, [product.originalPrice, hasAttributes]);
+
+//   const isContactPrice = displayPrice === 0 || displayPrice === null;
+
+//   const discountPercent = getDiscountPercent(
+//     displayPrice,
+//     displayOriginalPrice
+//   );
+
+//   const allRequiredSelected =
+//     !hasAttributes ||
+//     Object.keys(product.attributes ?? {}).every(
+//       (type) => selectedAttributes[type]
+//     );
+
+//   const handleSelect = (type: string, value: AttributeValue) => {
+//     setSelectedAttributes((prev) => ({
+//       ...prev,
+//       [type]: value.name,
+//     }));
+//     if (value.image) setSelectedImage(value.image);
+//   };
+
+//   const handleAddToCart = () => {
+//     console.log("🛒 Add to cart:", {
+//       productId: product.id,
+//       selectedAttributes,
+//       finalPrice,
+//     });
+//   };
+
+//   const renderRatingStars = () => {
+//     const rating = product.rating ?? 0;
+//     return (
+//       <div className="flex items-center gap-1 mt-1 text-warning-500 text-xs">
+//         {Array.from({ length: 5 }).map((_, i) => {
+//           const fill = Math.max(0, Math.min(1, rating - i));
+//           return (
+//             <div key={i} className="relative w-[14px] h-[14px]">
+//               <Star size={14} strokeWidth={1.5} className="absolute" />
+//               <div
+//                 className="absolute overflow-hidden top-0 left-0"
+//                 style={{ width: `${fill * 100}%` }}
+//               >
+//                 <Star size={14} strokeWidth={1.5} fill="currentColor" />
+//               </div>
+//             </div>
+//           );
+//         })}
+//         <span className="text-body-sm-500 text-gray-400 ms-1">
+//           ({rating.toFixed(1)})
+//         </span>
+//       </div>
+//     );
+//   };
+
+//   return (
+//     <div className="rounded-lg border shadow-sm group hover:shadow-md hover:border-primary-400 transition-all flex flex-col h-full">
+//       <Link
+//         href={`/${product.slug}.html`}
+//         className="block relative w-full aspect-[1/1] overflow-hidden rounded-t-lg group"
+//       >
+//         <AnimatePresence mode="wait">
+//           <motion.div
+//             key={displayImage}
+//             initial={{ opacity: 0, x: 20 }}
+//             animate={{ opacity: 1, x: 0 }}
+//             exit={{ opacity: 0, x: -20 }}
+//             transition={{ duration: 0.3 }}
+//             className="absolute inset-0"
+//           >
+//             <div className="relative w-full h-full">
+//               <Image
+//                 src={displayImage}
+//                 alt={product.name || "san-pham"}
+//                 fill
+//                 className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-t-lg"
+//                 sizes="100%"
+//               />
+//               <span className="pointer-events-none absolute inset-0 before:absolute before:top-0 before:left-[-100%] before:w-[60%] before:bg-white before:opacity-20 before:skew-x-[-20deg] before:blur-sm group-hover:before:animate-flash-glide" />
+//             </div>
+//           </motion.div>
+//         </AnimatePresence>
+//         {discountPercent > 0 && (
+//           <span className="absolute top-2 right-2 bg-danger-500 text-white text-body-tiny-500 px-2 py-1 rounded-lg">
+//             -{discountPercent}%
+//           </span>
+//         )}
+//       </Link>
+
+//       <div className="flex flex-col gap-1 flex-1 mt-2 mx-3">
+//         {product.brand && (
+//           <div className="text-label4 text-gray-800">
+//             <span className="bg-gray-300 shadow-sm rounded-md px-2 py-1">
+//               {product.brand}
+//             </span>
+//           </div>
+//         )}
+
+//         <Link
+//           href={`/${product.slug}.html`}
+//           className="font-semibold text-body-md-600 hover:text-red-600 line-clamp-2 min-h-[2.8em] capitalize"
+//         >
+//           {product.name}
+//         </Link>
+
+//         {renderRatingStars()}
+
+//         <div className="mt-1 flex flex-wrap items-center gap-1 text-base font-semibold text-gray-800">
+//           {isContactPrice ? (
+//             <Link
+//               href="/lien-he"
+//               className="text-blue-600 font-semibold text-body-md-500 hover:underline"
+//             >
+//               Liên hệ
+//             </Link>
+//           ) : displayPrice !== null ? (
+//             <>
+//               <span className="text-danger-500 font-bold text-body-md-500 mr-1">
+//                 {formatCurrency(displayPrice)}
+//               </span>
+//               {displayOriginalPrice > displayPrice && (
+//                 <span className="text-body-tiny-500 line-through text-gray-400">
+//                   {formatCurrency(displayOriginalPrice)}
+//                 </span>
+//               )}
+//             </>
+//           ) : (
+//             <span className="text-danger-500 font-bold text-body-md-500">
+//               {formatCurrency(prices.min)} – {formatCurrency(prices.max)}
+//             </span>
+//           )}
+//           <div className="mt-2 text-primary-700 font-bold text-base">
+//             {formatCurrency(finalPrice)}
+//           </div>
+//         </div>
+
+//         {hasAttributes && (
+//           <div className="mt-3">
+//             <ProductAttributeSelector
+//               attributes={product.attributes}
+//               selected={selectedAttributes}
+//               onSelect={handleSelect}
+//             />
+//           </div>
+//         )}
+//       </div>
+
+//       <div className="block mt-4">
+//         <Button
+//           onClick={handleAddToCart}
+//           disabled={!product.inStock || !allRequiredSelected}
+//           className="w-full flex items-center justify-center gap-2 bg-primary-700 text-white py-2 rounded-xl hover:bg-primary-600 transition disabled:opacity-50"
+//         >
+//           <ShoppingCart size={16} />
+//           {!product.inStock
+//             ? "Hết hàng"
+//             : allRequiredSelected
+//             ? "Thêm vào giỏ"
+//             : "Chọn thuộc tính"}
+//         </Button>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { AttributeValue } from "../../types/product";
+
+type AttributeSelectorProps = {
+  attributes?: { [key: string]: AttributeValue[] };
+  selected: { [key: string]: string };
+  onSelect: (type: string, value: AttributeValue) => void;
+};
+
+export default function ProductAttributeSelector({
+  attributes = {},
+  selected,
+  onSelect,
+}: AttributeSelectorProps) {
+  // Nếu không có attributes hoặc tất cả key đều không có value
+  const hasAttributes = Object.keys(attributes).length > 0;
+
+  if (!hasAttributes) return null;
+
+  return (
+    <div className="space-y-3">
+      {Object.entries(attributes).map(([type, values]) => (
+        <div key={type}>
+          {/* <div className="text-xs font-medium capitalize mb-1">
+            Chọn {type}:
+          </div> */}
+          <div className="flex gap-2 flex-wrap">
+            {values.map((value, idx) => {
+              const isSelected = selected[type] === value.name;
+              const isColor = type === "color";
+
+              const button = (
+                <button
+                  key={idx}
+                  onClick={() => onSelect(type, value)}
+                  className={`border rounded-md px-2 py-1 text-xs ${
+                    isSelected
+                      ? "bg-primary-600 text-white border-primary-600"
+                      : "border-gray-300"
+                  } ${isColor ? "w-6 h-6 p-0 rounded-full" : ""}`}
+                  style={isColor ? { backgroundColor: value.name } : undefined}
+                >
+                  {!isColor && value.name}
+                </button>
+              );
+
+              return isColor ? (
+                <Tooltip key={value.name}>
+                  <TooltipTrigger asChild>{button}</TooltipTrigger>
+                  <TooltipContent>{value.name}</TooltipContent>
+                </Tooltip>
+              ) : (
+                button
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+// "use client";
+
+// import { useState } from "react";
+// import { ProductType } from "@/app/(site)/types/product";
+// import { Button } from "@/components/ui/button";
+// import { ChevronDown, Loader2 } from "lucide-react";
+// import ProductCard from "../../common/ProductCard";
+// import useIsMobile from "../../common/useIsMobile";
+
+// const promotionProducts: ProductType[] = [
+//   {
+//     id: 1,
+//     name: "Khoan pin Tolsen 21V Chính Hãng Tolsen Uy Tín TPHCM",
+//     slug: "khoan-pin-tolsen-21v",
+//     image: "/products/home/spdm1.jpg",
+//     description: "Máy khoan pin đa năng",
+//     rating: 4.3,
+//     brand: "Tolsen",
+//     attributes: {
+//       color: [
+//         { name: "#EC9410", price: 1890000, image: "/products/home/spdm2.jpg" },
+//         { name: "#3989D6", price: 2890000, image: "/products/home/spdm1.jpg" },
+//         { name: "#000000", price: 3890000, image: "/products/home/spdm3.jpg" },
+//       ],
+//       size: [
+//         { name: "S", price: 0 },
+//         { name: "M", price: 100000 },
+//         { name: "L", price: 200000 },
+//       ],
+//       variant: [
+//         { name: "Tiêu chuẩn", price: 0 },
+//         { name: "Cao cấp", price: 500000 },
+//       ],
+//     },
+//     price: 0,
+//     originalPrice: 0,
+//     inStock: true,
+//   },
+//   {
+//     id: 2,
+//     name: "Máy cắt sắt Total 2200W chính hãng",
+//     slug: "may-cat-sat-total",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Cắt mạnh, bền bỉ",
+//     rating: 0,
+//     brand: "Total",
+//     attributes: {
+//       color: [
+//         { name: "#EC9410", price: 1890000, image: "/products/home/spdm2.jpg" },
+//         { name: "#3989D6", price: 2890000, image: "/products/home/spdm1.jpg" },
+//         { name: "#000000", price: 3890000, image: "/products/home/spdm3.jpg" },
+//       ],
+//     },
+//     price: 2200000,
+//     originalPrice: 2290000,
+//     inStock: false,
+//   },
+//   {
+//     id: 3,
+//     name: "Máy bắt vít Makita 12V Siêu bền",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm3.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 3.3,
+//     brand: "Makita",
+//     attributes: {
+//       variant: [
+//         { name: "Tiêu chuẩn", price: 0 },
+//         { name: "Cao cấp", price: 500000 },
+//       ],
+//     },
+//     price: 1890000,
+//     originalPrice: 2190000,
+//     inStock: true,
+//   },
+//   {
+//     id: 4,
+//     name: "Máy cắt gạch Bosch 1200W chống giật",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm4.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 1.8,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1690000,
+//     originalPrice: 0,
+//     inStock: true,
+//   },
+//   {
+//     id: 5,
+//     name: "Khoan pin Tolsen 21V thông minh hơn",
+//     slug: "khoan-pin-tolsen-21v",
+//     image: "/products/home/spdm1.jpg",
+//     description: "Máy khoan pin đa năng",
+//     rating: 4.5,
+//     brand: "Tolsen",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 2200000,
+//     originalPrice: 2290000,
+//     inStock: true,
+//   },
+//   {
+//     id: 6,
+//     name: "Máy cắt sắt Total 2200W tiết kiệm điện",
+//     slug: "may-cat-sat-total",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Cắt mạnh, bền bỉ",
+//     rating: 4.8,
+//     brand: "Total",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 2200000,
+//     originalPrice: 2600000,
+//     inStock: false,
+//   },
+//   {
+//     id: 7,
+//     name: "Máy bắt vít Makita 12V An toàn tay",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm3.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 4.2,
+//     brand: "Makita",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 8,
+//     name: "Máy cắt gạch Bosch 1200W",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm4.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 4.4,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 9,
+//     name: "Máy bắt vít Makita 12V chống văng",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm1.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 4.2,
+//     brand: "Makita",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1300000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 10,
+//     name: "Máy cắt gạch Bosch 1200W",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 4.4,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 11,
+//     name: "Máy cắt sắt Total 2200W tiết kiệm điện",
+//     slug: "may-cat-sat-total",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Cắt mạnh, bền bỉ",
+//     rating: 4.8,
+//     brand: "Total",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 2200000,
+//     originalPrice: 2600000,
+//     inStock: false,
+//   },
+//   {
+//     id: 12,
+//     name: "Máy bắt vít Makita 12V An toàn tay",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm3.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 4.2,
+//     brand: "Makita",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 13,
+//     name: "Máy cắt gạch Bosch 1200W",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm4.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 4.4,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 14,
+//     name: "Máy bắt vít Makita 12V chống văng",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm1.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 4.2,
+//     brand: "Makita",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1300000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 15,
+//     name: "Máy cắt gạch Bosch 1200W",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 4.4,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 16,
+//     name: "Máy cắt gạch Bosch 1200W",
+//     slug: "may-cat-gach-bosch",
+//     image: "/products/home/spdm2.jpg",
+//     description: "Dễ cắt, chính xác",
+//     rating: 4.4,
+//     brand: "Bosch",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1200000,
+//     originalPrice: 1890000,
+//     inStock: true,
+//   },
+//   {
+//     id: 17,
+//     name: "Máy bắt vít Makita 12V Siêu bền",
+//     slug: "may-bat-vit-makita",
+//     image: "/products/home/spdm3.jpg",
+//     description: "Chuyên dụng gia đình",
+//     rating: 3.3,
+//     brand: "Makita",
+//     attributes: {
+//       color: [],
+//       size: [],
+//       variant: [],
+//     },
+//     price: 1890000,
+//     originalPrice: 2190000,
+//     inStock: true,
+//   },
+// ];
+
+// export default function PromotionProduct() {
+//   const [visibleCount, setVisibleCount] = useState(10);
+
+//   const isMobile = useIsMobile();
+
+//   const visibleProducts = promotionProducts.slice(0, visibleCount);
+
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   const handleLoadMore = () => {
+//     setIsLoading(true);
+//     setTimeout(() => {
+//       setVisibleCount((prev) => prev + (isMobile ? 6 : 5));
+//       setIsLoading(false);
+//     }, 1000);
+//   };
+
+//   return (
+//     <section className="promotion-product mt-9">
+//       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-3">
+//         {visibleProducts.map((item) => (
+//           <ProductCard key={item.id} product={item} />
+//         ))}
+//       </div>
+//       {visibleCount < promotionProducts.length && (
+//         <div className="text-center mt-4">
+//           <Button
+//             onClick={handleLoadMore}
+//             disabled={isLoading}
+//             className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 flex items-center justify-center gap-2 disabled:opacity-60"
+//           >
+//             {isLoading ? (
+//               <>
+//                 <Loader2 className="animate-spin" size={16} />
+//                 Đang tải...
+//               </>
+//             ) : (
+//               <>
+//                 Xem thêm <ChevronDown size={16} />
+//               </>
+//             )}
+//           </Button>
+//         </div>
+//       )}
+//     </section>
+//   );
+// }

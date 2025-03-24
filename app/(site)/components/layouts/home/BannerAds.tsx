@@ -34,7 +34,7 @@ export default function BannerAds() {
         <Swiper
           spaceBetween={15}
           slidesPerView={2}
-          loop
+          loop={itemAds.length > 3}
           modules={[Autoplay]}
           autoplay={{ delay: 3000, disableOnInteraction: false }}
           breakpoints={{
