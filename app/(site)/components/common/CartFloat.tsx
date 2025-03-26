@@ -14,18 +14,20 @@ export default function CartFloatIcon() {
   if (isCheckoutPage) return null;
 
   return (
-    <Link
-      href="/thanh-toan"
-      className="fixed top-1/2 right-6 bg-secondary-500 p-3 rounded-full shadow-lg"
-    >
-      <div className="relative">
-        <ShoppingCart className="text-white w-6 h-6" />
-        {totalItems > 0 && (
-          <span className="absolute -top-2 -right-2 bg-danger-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full animate-bounce">
-            {totalItems}
-          </span>
-        )}
-      </div>
-    </Link>
+    <div className="ms:block hidden">
+      <Link
+        href="/thanh-toan"
+        className="fixed top-1/2 right-6 bg-primary_custom p-3 rounded-full shadow-lg"
+      >
+        <div className="relative">
+          <ShoppingCart className="text-gray-700 w-6 h-6" />
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-2 bg-warning-600 text-white text-body-tiny-500 font-bold w-5 h-5 flex items-center justify-center rounded-full animate-bounce">
+              {totalItems}
+            </span>
+          )}
+        </div>
+      </Link>
+    </div>
   );
 }

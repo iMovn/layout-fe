@@ -99,7 +99,7 @@ export function ProductSeller({ products }: ProductSellerProps) {
     (product: ProductType) => (
       <div
         key={product.id}
-        className="bg-white rounded-2xl shadow p-4 flex flex-col h-full hover:shadow-md transition-shadow"
+        className="bg-white rounded-lg shadow border-[1px] border-gray-200 transition-colors duration-300 hover:border-primary_custom flex flex-col h-full hover:shadow-md"
       >
         <Link
           href={`/${product.slug}.html`}
@@ -116,74 +116,85 @@ export function ProductSeller({ products }: ProductSellerProps) {
               className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-t-lg"
               priority={visibleProducts.indexOf(product) < 6} // Tải ảnh đầu tiên ưu tiên
             />
-            <span className="pointer-events-none absolute inset-0 before:absolute before:top-0 before:left-[-100%] before:w-[60%] before:bg-white before:opacity-20 before:skew-x-[-20deg] before:blur-sm group-hover:before:animate-flash-glide" />
+            <span className="pointer-events-none absolute inset-0 before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-[-100%] before:w-[60%] before:bg-white before:opacity-20 before:skew-x-[-20deg] before:blur-sm group-hover:before:animate-flash-glide"></span>
           </div>
         </Link>
-
-        <div className="mt-3 flex-grow">
-          <p className="text-sm text-gray-500 mb-1">{product.brand}</p>
-          <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2 min-h-[2.8em]">
-            {product.title}
-          </h3>
-          <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-            {product.description}
-          </p>
-        </div>
-
-        <div className="mt-auto">
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="text-lg font-bold text-red-600 whitespace-nowrap">
-              {formatCurrency(product.salePrice)}
-            </span>
-            {product.originalPrice > product.salePrice && (
-              <span className="line-through text-gray-400 text-sm whitespace-nowrap">
-                {formatCurrency(product.originalPrice)}
-              </span>
-            )}
-            {product.discountPercent > 0 && (
-              <span className="text-sm text-green-600 whitespace-nowrap">
-                -{product.discountPercent}%
-              </span>
-            )}
+        <div className="group_info mb-4 mx-3 flex flex-col flex-grow">
+          <div className="mt-3 flex-grow min-h-0">
+            <p className="text-sm text-gray-500 mb-1">{product.brand}</p>
+            <h3 className="text-lg font-semibold text-gray-800 mb-1 line-clamp-2 min-h-[2.8em]">
+              {product.title}
+            </h3>
+            <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+              {product.description}
+            </p>
           </div>
 
-          <div className="text-sm mb-3 flex items-center gap-1">
-            {product.inStock ? (
-              <>
-                <Check className="w-4 h-4 text-green-600" />
-                <span className="text-gray-700">Còn hàng</span>
-              </>
-            ) : (
-              <>
-                <CircleX className="w-4 h-4 text-red-600" />
-                <span className="text-gray-700">Hết hàng</span>
-              </>
-            )}
-          </div>
+          <div className="mt-auto">
+            <div className="flex justify-between items-center gap-2 mb-2">
+              <div className="price_l -space-y-1">
+                <div className="salePrice">
+                  <span className="ms:text-body-md-500 text-body-sm-500 font-bold text-danger-600 whitespace-nowrap">
+                    {formatCurrency(product.salePrice)}
+                  </span>
+                </div>
+                <div className="originalPrice">
+                  {product.originalPrice > product.salePrice && (
+                    <span className="line-through text-gray-400 ms:text-body-sm-500 text-body-tiny-500 whitespace-nowrap">
+                      {formatCurrency(product.originalPrice)}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <div className="percent_r">
+                {product.discountPercent > 0 && (
+                  <span className="ms:text-body-sm-500 text-body-tiny-500 bg-danger-500 ms:py-1 py-0.5 ms:px-2 px-1 rounded-md text-white whitespace-nowrap">
+                    -{product.discountPercent}%
+                  </span>
+                )}
+              </div>
+            </div>
 
-          {product.inStock ? (
-            <Button
-              className="w-full mt-auto"
-              onClick={() => handleAddToCart(product)}
-              disabled={addingId === product.id}
-              size="sm"
-            >
-              {addingId === product.id ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <div className="text-sm mb-3 flex items-center gap-1">
+              {product.inStock ? (
+                <>
+                  <Check className="w-4 h-4 text-primary-600" />
+                  <span className="text-gray-700">Còn hàng</span>
+                </>
               ) : (
-                <ShoppingCart className="w-4 h-4 mr-2" />
+                <>
+                  <CircleX className="w-4 h-4 text-danger-600" />
+                  <span className="text-gray-700">Hết hàng</span>
+                </>
               )}
-              {addingId === product.id ? "Đang thêm..." : "Thêm vào giỏ"}
-            </Button>
-          ) : (
-            <a
-              href="/lien-he"
-              className="w-full flex items-center justify-center bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-md text-sm transition-colors"
-            >
-              <OctagonAlert className="w-4 h-4 mr-2" />
-              Liên hệ
-            </a>
-          )}
+            </div>
+
+            {product.inStock ? (
+              <Button
+                className="w-full mt-auto bg-primary_custom hover:bg-primary-400"
+                onClick={() => handleAddToCart(product)}
+                disabled={addingId === product.id}
+                size="sm"
+              >
+                {addingId === product.id ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                )}
+                {addingId === product.id ? "Đang thêm..." : "Thêm vào giỏ"}
+              </Button>
+            ) : (
+              <Button asChild size="sm">
+                <Link
+                  href="/lien-he"
+                  className="w-full flex items-center justify-center bg-warning-500 hover:bg-warning-600 text-white py-2 rounded-md text-sm transition-colors"
+                >
+                  <OctagonAlert className="w-4 h-4 mr-2" />
+                  Liên hệ
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     ),
@@ -192,11 +203,11 @@ export function ProductSeller({ products }: ProductSellerProps) {
 
   return (
     <>
-      <section className="py-10 container mx-auto px-4">
+      <section className="py-10 mx-auto">
         <h2 className="text-heading3 font-bold mb-8 text-center">
           Sản phẩm bán chạy
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {visibleProducts.map(renderProduct)}
         </div>
 
