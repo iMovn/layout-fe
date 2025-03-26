@@ -73,8 +73,8 @@ const contentFooter = {
       heading: "Fanpage Facebook",
       links: [
         {
-          codeHtml:
-            '<iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkingsafevn&tabs=timeline&width=340&height=245&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=527381814313178" width="100%" height="245" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>',
+          codeHtml: "#",
+          // <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fkingsafevn&tabs=timeline&width=340&height=245&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=527381814313178" width="100%" height="245" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
         },
       ],
     },
@@ -84,8 +84,8 @@ const contentFooter = {
       heading: "Google Business",
       links: [
         {
-          codeHtml:
-            '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15677.75757069679!2d106.682262!3d10.77762!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3b27d8a7fd%3A0xdb0d92470911a699!2sThe%20Box%20Market!5e0!3m2!1svi!2sus!4v1742803718488!5m2!1svi!2sus" width="100%" height="245" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>',
+          codeHtml: "#",
+          // <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15677.75757069679!2d106.682262!3d10.77762!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f3b27d8a7fd%3A0xdb0d92470911a699!2sThe%20Box%20Market!5e0!3m2!1svi!2sus!4v1742803718488!5m2!1svi!2sus" width="100%" height="245" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         },
       ],
     },

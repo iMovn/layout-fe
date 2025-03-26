@@ -13,7 +13,7 @@ export default function AdsBanner() {
       {banners.map((banner, index) => (
         <div
           key={index}
-          className="relative flex justify-center overflow-hidden"
+          className="relative flex h-auto w-auto justify-center overflow-hidden"
         >
           <Image
             src={banner.src}
@@ -22,6 +22,7 @@ export default function AdsBanner() {
             height={125}
             quality={100}
             priority
+            className="object-cover"
           />
         </div>
       ))}

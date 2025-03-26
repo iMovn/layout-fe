@@ -1,23 +1,19 @@
-// ===========================
-// Type sản phẩm khuyến mãi
-// ===========================
-export type AttributeValue = {
-  name: string;
-  price?: number;
-  image?: string;
-};
-export type ProductType = {
+export interface ProductBase {
   id: number;
-  name: string;
-  slug: string;
+  title: string;
   image: string;
-  description?: string;
-  rating: number; // 0 -> 5
-  attributes?: {
-    [key: string]: AttributeValue[];
-  };
-  brand?: string;
   price: number;
+}
+
+export interface ProductType extends ProductBase {
+  slug: string;
+  brand?: string;
+  description: string;
   originalPrice: number;
-  inStock?: boolean;
-};
+  salePrice: number;
+  discountPercent: number;
+  inStock: boolean;
+}
+export interface CartItem extends ProductBase {
+  quantity: number;
+}

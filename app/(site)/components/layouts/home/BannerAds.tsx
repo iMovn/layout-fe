@@ -55,9 +55,8 @@ export default function BannerAds() {
                     alt={item.alt}
                     width={600}
                     height={400}
-                    quality={100}
-                    priority
-                    className="w-full h-auto object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    className=" object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
                   />
                   <span className="pointer-events-none absolute inset-0 before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-[-100%] before:w-[60%] before:bg-white before:opacity-20 before:skew-x-[-20deg] before:blur-sm group-hover:before:animate-flash-glide"></span>
                 </div>
