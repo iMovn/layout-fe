@@ -187,7 +187,7 @@ export function ProductSeller({ products }: ProductSellerProps) {
         </div>
       </div>
     ),
-    [addingId, handleAddToCart, inCart]
+    [addingId, handleAddToCart, inCart, visibleProducts]
   );
 
   return (

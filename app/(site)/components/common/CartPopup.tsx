@@ -24,7 +24,7 @@ import { useCart } from "react-use-cart";
 import Image from "next/image";
 import Link from "next/link";
 import { formatCurrency } from "@/lib/utils";
-import { Trash2, X, Plus, Minus } from "lucide-react";
+import { Trash2, Plus, Minus } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 
