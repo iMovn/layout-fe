@@ -6,6 +6,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import BoxSearch from "./BoxSearch";
 
+// Utility function để đảm bảo URL là đường dẫn tuyệt đối
+function ensureAbsolutePath(path: string): string {
+  if (!path) return "/";
+
+  // Nếu đã bắt đầu bằng /, trả về nguyên bản
+  if (path.startsWith("/")) return path;
+
+  // Nếu không, thêm / vào đầu
+  return `/${path}`;
+}
+
 // Danh mục sản phẩm
 const categories = [
   {
@@ -59,11 +70,11 @@ export default function HeaderMain() {
         </div>
 
         <div className="search_cate_hot_ecom ms:flex items-center justify-between hidden gap-9">
-          <div className="cate_ecom  flex justify-between space-x-6">
+          <div className="cate_ecom flex justify-between space-x-6">
             {categories.map((cat) => (
               <Link
                 key={cat.id}
-                href={cat.slug}
+                href={ensureAbsolutePath(cat.slug)}
                 className="group flex flex-col items-center text-center space-y-2"
               >
                 <Image

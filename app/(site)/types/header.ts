@@ -1,29 +1,15 @@
-export type MainMenuItem = {
-  label: string;
-  href: string;
-};
-
-export type SubCategory = {
-  name: string;
-  href: string;
-};
-
-export type ProductCategory = {
-  name: string;
-  href: string;
-  icon: string;
-  children?: SubCategory[];
-};
-
-export type Brand = {
+export type MenuItem = {
   id: number;
   name: string;
-  slug: string;
+  link: string;
+  icon?: string; // URL icon (ảnh)
+  children: MenuItem[];
+  is_active: number;
+  parent_id?: number;
 };
 
-export type MenuItem = {
-  title: string;
-  slug: string;
-  icon?: string; // URL icon (ảnh)
-  children?: MenuItem[];
+export type ApiResponse = {
+  status: boolean;
+  message: string;
+  data: MenuItem[];
 };

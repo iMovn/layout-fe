@@ -6,73 +6,45 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { MenuItem } from "@/app/(site)/types/header";
-
-const menus: MenuItem[] = [
-  { title: "Trang chủ", slug: "/", icon: "/icon_img/icon-mm5.png" },
-  {
-    title: "Sản phẩm",
-    slug: "/san-pham",
-    icon: "/icon_img/icon-mm7.png",
-    children: [
-      { title: "Bảo hộ lao động", slug: "/bao-ho-lao-dong" },
-      {
-        title: "Dụng cụ Pin",
-        slug: "/dung-cu-pin",
-        children: [
-          { title: "Máy chà nhám pin", slug: "/may-cha-nham-pin" },
-          { title: "Máy hút bụi pin", slug: "/may-hut-bui-pin" },
-          { title: "Máy làm vườn pin", slug: "/may-lam-vuon-pin" },
-        ],
-      },
-      { title: "Dụng cụ Điện", slug: "/dung-cu-dien" },
-      { title: "Dụng cụ xăng", slug: "/dung-cu-xang" },
-      { title: "Dụng cụ cầm tay", slug: "/dung-cu-cam-tay" },
-      { title: "Phụ tùng phụ kiện", slug: "/phu-tung-phu-kien" },
-    ],
-  },
-  {
-    title: "Thương hiệu",
-    slug: "/thuong-hieu",
-    icon: "/icon_img/icon-mm1.png",
-    children: [
-      {
-        title: "Makita",
-        slug: "/thuong-hieu/makita",
-        icon: "/brands/br4.png",
-      },
-      { title: "Bosch", slug: "/thuong-hieu/bosch", icon: "/brands/br2.png" },
-      {
-        title: "Dewalt",
-        slug: "/thuong-hieu/dewalt",
-        icon: "/brands/br3.png",
-      },
-    ],
-  },
-  { title: "Khuyến mãi", slug: "/khuyen-mai", icon: "/icon_img/icon-mm2.png" },
-  {
-    title: "Sản phẩm mới",
-    slug: "/san-pham-moi",
-    icon: "/icon_img/icon-mm4.png",
-  },
-  { title: "Tin tức", slug: "/tin-tuc", icon: "/icon_img/icon-mm3.png" },
-  { title: "Liên hệ", slug: "/lien-he", icon: "/icon_img/icon-mm6.png" },
-];
+import { fetchMenu } from "@/app/(site)/api/menu";
+import { usePathname } from "next/navigation";
 
 export default function MobileMenuSlide() {
   const [isOpen, setIsOpen] = useState(false);
-  const [history, setHistory] = useState<MenuItem[][]>([menus]);
+  const [history, setHistory] = useState<MenuItem[][]>([]);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const pathname = usePathname();
 
+  // Fetch menu data
   useEffect(() => {
-    const toggle = () => setIsOpen((prev) => !prev);
-    window.addEventListener("toggle-menu", toggle);
-    return () => window.removeEventListener("toggle-menu", toggle);
+    async function loadMenu() {
+      try {
+        setIsLoading(true);
+        const data = await fetchMenu();
+        setMenuItems(data);
+        setHistory([data]);
+      } catch (error) {
+        console.error("Error loading menu:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadMenu();
   }, []);
 
-  const currentMenu = history[history.length - 1];
+  // Event listener for toggle
+  useEffect(() => {
+    const handleToggle = () => setIsOpen((prev) => !prev);
+    window.addEventListener("toggle-menu", handleToggle);
+    return () => window.removeEventListener("toggle-menu", handleToggle);
+  }, []);
+
+  const currentMenu = history[history.length - 1] || [];
 
   const handleNext = (item: MenuItem) => {
-    if (item.children) {
-      setHistory((prev) => [...prev, item.children!]);
+    if (item.children?.length) {
+      setHistory((prev) => [...prev, item.children]);
     }
   };
 
@@ -84,86 +56,135 @@ export default function MobileMenuSlide() {
 
   const handleClose = () => {
     setIsOpen(false);
-    setHistory([menus]);
+    setTimeout(() => {
+      setHistory([menuItems]);
+    }, 300);
   };
 
-  const findParentTitle = () => {
-    if (history.length < 2) return "";
+  const findParentName = () => {
+    if (history.length < 2) return "Menu";
     const parentLevel = history[history.length - 2];
-    const currentLevel = history[history.length - 1];
-
-    for (const item of parentLevel) {
-      if (item.children === currentLevel) {
-        return item.title;
-      }
-    }
-    return "";
+    const parentItem = parentLevel.find(
+      (item) => item.children === currentMenu
+    );
+    return parentItem?.name || "Quay lại";
   };
+
+  // Hàm kiểm tra active state
+  const isItemActive = (item: MenuItem) => {
+    if (!item.link) return false;
+
+    const currentPath = pathname.replace(/\/$/, "");
+    const itemPath = item.link.replace(/\/$/, "");
+
+    // Kiểm tra exact match
+    if (currentPath === itemPath || currentPath === `/${itemPath}`) return true;
+
+    // Kiểm tra các children (nếu có)
+    if (item.children) {
+      return item.children.some((child) => {
+        const childPath = child.link?.replace(/\/$/, "") || "";
+        return currentPath === childPath || currentPath === `/${childPath}`;
+      });
+    }
+
+    return false;
+  };
+
+  if (isLoading) return null;
 
   return (
     <div
       className={clsx(
-        "fixed inset-0 z-[100] transition-transform duration-300",
+        "fixed inset-0 z-[1000] transition-transform duration-300 ease-in-out",
         isOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
       )}
     >
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50"
+        className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
         onClick={handleClose}
       />
 
       {/* Slide Menu */}
-      <div className="relative bg-white w-[75%] h-full p-4 overflow-y-auto">
-        {history.length === 1 && (
-          <div className="flex justify-center mb-4">
-            <p className="uppercase text-body-md-600 font-bold text-primary-600">
-              Menu
-            </p>
-          </div>
-        )}
-        {history.length > 1 && (
-          <button
-            onClick={handleBack}
-            className="flex items-center justify-center mb-4 text-primary relative w-full"
-          >
-            <ChevronLeft className="absolute left-0 w-4 h-4" />
-            <span className="text-body-md-600 font-bold uppercase text-primary-600">
-              {findParentTitle()}
-            </span>
-          </button>
-        )}
+      <div className="relative bg-white w-4/5 h-full p-4 overflow-y-auto flex flex-col">
+        {/* Header */}
+        <div className="border-b border-gray-200 pb-4 mb-4">
+          {history.length > 1 ? (
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-2 text-primary-600 font-bold w-full"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span className="text-lg uppercase">{findParentName()}</span>
+            </button>
+          ) : (
+            <h2 className="text-lg font-bold text-center uppercase text-primary-600">
+              {findParentName()}
+            </h2>
+          )}
+        </div>
 
-        <ul className="mt-5 divide-y divide-dashed divide-gray-200">
-          {currentMenu.map((item, index) => (
-            <li key={index} className="flex items-center justify-between py-3">
-              <Link
-                href={item.slug}
-                onClick={handleClose}
-                className="flex items-center gap-2 text-sm font-medium text-gray-800 hover:text-primary"
-              >
-                {item.icon && (
-                  <Image
-                    src={item.icon}
-                    alt={item.title}
-                    width={24}
-                    height={24}
-                    className="w-6 h-6 object-contain"
-                  />
-                )}
-                <span>{item.title}</span>
-              </Link>
-              {item.children && (
-                <button
-                  onClick={() => handleNext(item)}
-                  className="text-gray-500 hover:text-primary"
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              )}
-            </li>
-          ))}
+        {/* Menu Items */}
+        <ul className="flex-1 divide-y divide-dashed divide-gray-100">
+          {currentMenu.length > 0 ? (
+            currentMenu.map((item) => {
+              const active = isItemActive(item);
+              return (
+                <li key={item.id} className="group">
+                  <div className="flex items-center justify-between py-3">
+                    <Link
+                      href={item.link || "#"}
+                      onClick={item.children?.length ? undefined : handleClose}
+                      className={clsx(
+                        "flex-1 flex items-center gap-3",
+                        active
+                          ? "text-primary-600 font-semibold"
+                          : "text-gray-800 hover:text-primary-500 font-medium"
+                      )}
+                    >
+                      {item.icon && (
+                        <Image
+                          src={item.icon}
+                          alt={item.name}
+                          width={24}
+                          height={24}
+                          className="w-6 h-6 object-contain"
+                        />
+                      )}
+                      <span>{item.name}</span>
+                    </Link>
+                    {item.children?.length > 0 && (
+                      <button
+                        onClick={() => handleNext(item)}
+                        className={clsx(
+                          "p-1",
+                          active
+                            ? "text-primary-500"
+                            : "text-gray-400 group-hover:text-primary-500"
+                        )}
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                </li>
+              );
+            })
+          ) : (
+            <li className="py-4 text-center text-gray-500">Không có mục nào</li>
+          )}
         </ul>
+
+        {/* Footer */}
+        <div className="pt-4 border-t border-gray-200">
+          <button
+            onClick={handleClose}
+            className="w-full py-2 text-center text-gray-500 hover:text-primary-500"
+          >
+            Đóng menu
+          </button>
+        </div>
       </div>
     </div>
   );
